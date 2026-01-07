@@ -1,0 +1,9 @@
+mysql_root_password: "StrongRootPass!"
+mysql_app_user: "appuser"
+mysql_app_password: "AppUserPass!"
+mysql_db: "appdb"
+
+postgres_app_user: "pguser"
+postgres_app_password: "PgUserPass!"
+postgres_db: "pgdb"
+postgres_root_password: "PgRootPass123!"

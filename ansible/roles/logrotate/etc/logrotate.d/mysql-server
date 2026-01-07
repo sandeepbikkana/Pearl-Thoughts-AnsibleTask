@@ -1,0 +1,12 @@
+/var/log/mysql/error.log {
+    daily
+    rotate 7
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 640 mysql adm
+    postrotate
+        systemctl reload mysql > /dev/null 2>&1 || true
+    endscript
+}

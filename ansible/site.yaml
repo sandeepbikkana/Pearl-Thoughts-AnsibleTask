@@ -1,0 +1,9 @@
+- hosts: servers
+  become: yes
+  roles:
+    - common
+    - nginx
+    - mysql
+    - postgresql
+    - docker
+    - logrotate

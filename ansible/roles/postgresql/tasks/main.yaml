@@ -1,0 +1,70 @@
+
+---
+# -------------------------------------------------
+# Install PostgreSQL and dependency
+# -------------------------------------------------
+- name: Install PostgreSQL
+  apt:
+    name:
+      - postgresql
+      - python3-psycopg2
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Ensure PostgreSQL service is running
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+  become: yes
+
+# -------------------------------------------------
+# Create database
+# -------------------------------------------------
+- name: Create PostgreSQL database
+  postgresql_db:
+    name: "{{ postgres_db }}"
+  become: yes
+  become_user: postgres
+
+# -------------------------------------------------
+# Create application user (NO priv)
+# -------------------------------------------------
+- name: Create PostgreSQL application user
+  postgresql_user:
+    name: "{{ postgres_app_user }}"
+    password: "{{ postgres_app_password }}"
+  become: yes
+  become_user: postgres
+
+# -------------------------------------------------
+# Set database owner (THIS replaces priv)
+# -------------------------------------------------
+- name: Set database owner
+  postgresql_db:
+    name: "{{ postgres_db }}"
+    owner: "{{ postgres_app_user }}"
+  become: yes
+  become_user: postgres
+
+# -------------------------------------------------
+# Copy seed file
+# -------------------------------------------------
+- name: Copy PostgreSQL seed file
+  copy:
+    src: postgres_seed.sql
+    dest: /tmp/postgres_seed.sql
+    mode: '0644'
+  become: yes
+
+# -------------------------------------------------
+# Import seed data
+# -------------------------------------------------
+- name: Import PostgreSQL seed data
+  postgresql_db:
+    name: "{{ postgres_db }}"
+    state: restore
+    target: /tmp/postgres_seed.sql
+  become: yes
+  become_user: postgres

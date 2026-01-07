@@ -1,0 +1,59 @@
+- name: Install MySQL Python dependency
+  apt:
+    name: python3-pymysql
+    state: present
+  become: yes
+
+- name: Install MySQL
+  apt:
+    name: mysql-server
+    state: present
+  become: yes
+
+- name: Ensure MySQL is running
+  systemd:
+    name: mysql
+    enabled: yes
+    state: started
+  become: yes
+
+- name: Create MySQL root config for socket auth
+  copy:
+    dest: /root/.my.cnf
+    content: |
+      [client]
+      user=root
+      socket=/var/run/mysqld/mysqld.sock
+    owner: root
+    group: root
+    mode: '0600'
+  become: yes
+
+- name: Create application database
+  mysql_db:
+    name: "{{ mysql_db }}"
+    state: present
+  become: yes
+
+- name: Create application user
+  mysql_user:
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_user_password }}"
+    priv: "{{ mysql_db }}.*:ALL"
+    state: present
+  become: yes
+
+- name: Copy seed SQL
+  copy:
+    src: seed.sql
+    dest: /tmp/seed.sql
+  become: yes
+
+- name: Import sample data
+  mysql_db:
+    name: "{{ mysql_db }}"
+    state: import
+    target: /tmp/seed.sql
+  become: yes
+
+
