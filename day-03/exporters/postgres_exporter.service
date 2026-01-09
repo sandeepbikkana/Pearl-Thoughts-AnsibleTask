@@ -1,0 +1,9 @@
+[Unit]
+Description=PostgreSQL Exporter
+
+[Service]
+Environment=DATA_SOURCE_NAME=postgresql://exporter:exporterpass@localhost:5432/postgres?sslmode=disable
+ExecStart=/usr/local/bin/postgres_exporter
+
+[Install]
+WantedBy=default.target

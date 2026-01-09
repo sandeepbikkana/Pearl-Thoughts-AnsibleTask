@@ -1,0 +1,9 @@
+[Unit]
+Description=MySQL Exporter
+
+[Service]
+ExecStart=/usr/local/bin/mysqld_exporter \
+  --config.my-cnf=/etc/mysql_exporter.cnf
+
+[Install]
+WantedBy=default.target
