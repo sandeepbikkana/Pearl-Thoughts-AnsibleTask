@@ -15,7 +15,7 @@ Environment-specific configuration using tfvars
 
 
 # Architecture
-
+'''
 User
   |
   | HTTP (80)
@@ -29,7 +29,7 @@ Private EC2 (Docker + Strapi)
   | TCP (5432)
   v
 PostgreSQL (RDS - Private Subnets)
-
+'''
 
 ---Key Components:
 
@@ -140,5 +140,6 @@ ALB is the only public entry point
 Security groups use least privilege access
 
 IAM role used for ECR authentication (no static credentials)
+
 
 SSH access restricted to bastion host only (To connect to private Ec2)
